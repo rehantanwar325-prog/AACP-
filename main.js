@@ -257,10 +257,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let baseRate = localStorage.getItem("salim_daily_base_rate");
     if (!baseRate) {
-        baseRate = "130";
+        baseRate = "180";
         localStorage.setItem("salim_daily_base_rate", baseRate);
     }
-    baseRate = parseInt(baseRate) || 130;
+    baseRate = parseInt(baseRate) || 180;
 
     // Update live market ticker alert bar base rate
     const baseRateTickerVal = document.getElementById("ticker-base-rate");
@@ -307,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!productsGridContainer) return;
         productsGridContainer.innerHTML = "";
 
-        const currentBaseRate = parseInt(localStorage.getItem("salim_daily_base_rate")) || 130;
+        const currentBaseRate = parseInt(localStorage.getItem("salim_daily_base_rate")) || 180;
 
         products.forEach(p => {
             const card = document.createElement("div");
@@ -392,7 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let totalItems = 0;
         let totalPrice = 0;
-        const currentBaseRate = parseInt(localStorage.getItem("salim_daily_base_rate")) || 130;
+        const currentBaseRate = parseInt(localStorage.getItem("salim_daily_base_rate")) || 180;
 
         products.forEach(p => {
             const qty = cart[p.id] || 0;
@@ -649,7 +649,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const address = orderType === "delivery" ? document.getElementById("cart-cust-address").value.trim() : "";
             const notes = document.getElementById("cart-cust-notes").value.trim();
 
-            const currentBaseRate = parseInt(localStorage.getItem("salim_daily_base_rate")) || 130;
+            const currentBaseRate = parseInt(localStorage.getItem("salim_daily_base_rate")) || 180;
 
             let text = `*New Order - AACP Chicken*\n\n`;
             text += `*Customer Details:*\n`;
@@ -1034,8 +1034,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Fetch live Mandi Rate from npoint.io (Real-time Sync)
-    fetch("https://api.npoint.io/21cb0cf699478fcf70a3")
+    // Fetch live Mandi Rate from server-hosted JSON file (Real-time Sync)
+    fetch("mandi_rate.json?t=" + Date.now())
         .then(response => {
             if (response.ok) return response.json();
             throw new Error("HTTP status: " + response.status);
@@ -1043,7 +1043,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
             if (data && data.mandi_rate) {
                 const fetchedRate = parseInt(data.mandi_rate);
-                const currentLocalRate = parseInt(localStorage.getItem("salim_daily_base_rate")) || 130;
+                const currentLocalRate = parseInt(localStorage.getItem("salim_daily_base_rate")) || 180;
                 if (fetchedRate > 0 && fetchedRate !== currentLocalRate) {
                     localStorage.setItem("salim_daily_base_rate", fetchedRate.toString());
                     
@@ -1061,7 +1061,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         })
-        .catch(err => console.log("npoint live rate fetch failed, using local fallback:", err));
+        .catch(err => console.log("Rate file fetch failed, using local fallback:", err));
 
     // Ensure all Lucide icons are rendered on initial page load
     if (typeof lucide !== "undefined") {

@@ -180,23 +180,46 @@ document.addEventListener("DOMContentLoaded", () => {
     const baseRateInput = document.getElementById("base-rate-input");
 
     if (baseRateForm) {
-        baseRateForm.addEventListener("submit", (e) => {
+        baseRateForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const newRate = baseRateInput.value;
             localStorage.setItem("salim_daily_base_rate", newRate);
-            
-            // Save to npoint.io Database (POST)
-            fetch("https://api.npoint.io/21cb0cf699478fcf70a3", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ mandi_rate: parseInt(newRate) })
-            })
-            .then(res => {
-                if (!res.ok) console.error("Cloud base rate save failed");
-            })
-            .catch(err => console.error("Cloud base rate save error:", err));
+
+            // Push updated rate to GitHub repo (auto-deploys via Cloudflare)
+            const ghToken = localStorage.getItem("salim_github_token") || "";
+            if (ghToken) {
+                try {
+                    // Get current file SHA
+                    const getResp = await fetch("https://api.github.com/repos/rehantanwar325-prog/AACP-/contents/mandi_rate.json?ref=cloudflare/workers-autoconfig", {
+                        headers: { "Authorization": "token " + ghToken }
+                    });
+                    const fileData = await getResp.json();
+                    const sha = fileData.sha || "";
+
+                    // Push new content
+                    const content = btoa(JSON.stringify({ mandi_rate: parseInt(newRate) }) + "\n");
+                    const putResp = await fetch("https://api.github.com/repos/rehantanwar325-prog/AACP-/contents/mandi_rate.json", {
+                        method: "PUT",
+                        headers: {
+                            "Authorization": "token " + ghToken,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            message: "Update mandi rate to " + newRate,
+                            content: content,
+                            sha: sha,
+                            branch: "cloudflare/workers-autoconfig"
+                        })
+                    });
+                    if (putResp.ok) {
+                        console.log("Rate pushed to GitHub successfully!");
+                    } else {
+                        console.error("GitHub push failed:", await putResp.text());
+                    }
+                } catch (err) {
+                    console.error("GitHub API error:", err);
+                }
+            }
 
             refreshData();
             alert("Daily chicken base rate successfully updated to ₹" + newRate + "/Kg!");
@@ -204,13 +227,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function initializeDashboard() {
-        const rate = localStorage.getItem("salim_daily_base_rate") || "130";
+        const rate = localStorage.getItem("salim_daily_base_rate") || "180";
         if (baseRateInput) {
             baseRateInput.value = rate;
         }
 
-        // Fetch live Mandi Rate from npoint.io (Real-time Sync)
-        fetch("https://api.npoint.io/21cb0cf699478fcf70a3")
+        // Fetch live Mandi Rate from server-hosted JSON file
+        fetch("mandi_rate.json?t=" + Date.now())
             .then(response => {
                 if (response.ok) return response.json();
                 throw new Error("HTTP status: " + response.status);
@@ -227,7 +250,27 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
             })
-            .catch(err => console.log("npoint live rate fetch failed inside admin:", err));
+            .catch(err => console.log("Rate file fetch failed inside admin:", err));
+
+        // GitHub Token setup
+        const ghTokenInput = document.getElementById("github-token-input");
+        const btnSaveToken = document.getElementById("btn-save-github-token");
+        if (ghTokenInput) {
+            const savedToken = localStorage.getItem("salim_github_token") || "";
+            if (savedToken) ghTokenInput.value = savedToken;
+        }
+        if (btnSaveToken) {
+            btnSaveToken.addEventListener("click", () => {
+                const token = document.getElementById("github-token-input").value.trim();
+                if (token) {
+                    localStorage.setItem("salim_github_token", token);
+                    alert("GitHub Token saved! Now when you update the rate, it will auto-sync to all devices.");
+                } else {
+                    localStorage.removeItem("salim_github_token");
+                    alert("GitHub Token removed.");
+                }
+            });
+        }
 
         initializeSettings();
         refreshData();
@@ -404,7 +447,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const baseRate = parseInt(localStorage.getItem("salim_daily_base_rate")) || 130;
+        const baseRate = parseInt(localStorage.getItem("salim_daily_base_rate")) || 180;
 
         products.forEach(p => {
             const row = document.createElement("tr");
