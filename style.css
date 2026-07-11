@@ -1840,6 +1840,19 @@ select.form-control option {
 
 /* Responsive adjustments */
 @media (max-width: 575px) {
+    .ticker-container {
+        flex-direction: column;
+        gap: 6px;
+    }
+    .ticker-alert {
+        font-size: 0.65rem;
+        padding: 2px 8px;
+        white-space: nowrap;
+    }
+    .ticker-text {
+        text-align: center;
+        white-space: nowrap;
+    }
     .cart-float-btn {
         bottom: 90px;
         right: 20px;
