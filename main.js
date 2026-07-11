@@ -1034,6 +1034,33 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Fetch live Mandi Rate from KVdb (Real-time Sync)
+    fetch("https://kvdb.io/43Cez4k1JXFjLx5TQhQic2/mandi_rate")
+        .then(response => {
+            if (response.ok) return response.text();
+            throw new Error("HTTP status: " + response.status);
+        })
+        .then(text => {
+            const fetchedRate = parseInt(text.trim());
+            const currentLocalRate = parseInt(localStorage.getItem("salim_daily_base_rate")) || 130;
+            if (fetchedRate > 0 && fetchedRate !== currentLocalRate) {
+                localStorage.setItem("salim_daily_base_rate", fetchedRate.toString());
+                
+                // Re-render UI elements
+                const baseRateTickerVal = document.getElementById("ticker-base-rate");
+                if (baseRateTickerVal) {
+                    baseRateTickerVal.textContent = "₹" + fetchedRate;
+                }
+                if (typeof renderProducts === "function") {
+                    renderProducts();
+                }
+                if (typeof updateCart === "function") {
+                    updateCart();
+                }
+            }
+        })
+        .catch(err => console.log("KVdb live rate fetch failed, using local fallback:", err));
+
     // Ensure all Lucide icons are rendered on initial page load
     if (typeof lucide !== "undefined") {
         lucide.createIcons();

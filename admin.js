@@ -184,6 +184,17 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             const newRate = baseRateInput.value;
             localStorage.setItem("salim_daily_base_rate", newRate);
+            
+            // Save to KVdb Database (PUT)
+            fetch("https://kvdb.io/43Cez4k1JXFjLx5TQhQic2/mandi_rate", {
+                method: "PUT",
+                body: newRate.toString()
+            })
+            .then(res => {
+                if (!res.ok) console.error("Cloud base rate save failed");
+            })
+            .catch(err => console.error("Cloud base rate fetch save error:", err));
+
             refreshData();
             alert("Daily chicken base rate successfully updated to ₹" + newRate + "/Kg!");
         });
@@ -194,6 +205,25 @@ document.addEventListener("DOMContentLoaded", () => {
         if (baseRateInput) {
             baseRateInput.value = rate;
         }
+
+        // Fetch live Mandi Rate from KVdb (Real-time Sync)
+        fetch("https://kvdb.io/43Cez4k1JXFjLx5TQhQic2/mandi_rate")
+            .then(response => {
+                if (response.ok) return response.text();
+                throw new Error("HTTP status: " + response.status);
+            })
+            .then(text => {
+                const fetchedRate = parseInt(text.trim());
+                if (fetchedRate > 0) {
+                    localStorage.setItem("salim_daily_base_rate", fetchedRate.toString());
+                    if (baseRateInput) {
+                        baseRateInput.value = fetchedRate.toString();
+                    }
+                    refreshData();
+                }
+            })
+            .catch(err => console.log("KVdb live rate fetch failed inside admin:", err));
+
         initializeSettings();
         refreshData();
     }
