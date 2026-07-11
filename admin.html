@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AACP Chicken | Admin Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Admin CSS -->
+    <link rel="stylesheet" href="admin.css?v=4">
+</head>
+<body>
+
+    <!-- 1. Secure Login Overlay Gate -->
+    <div class="login-overlay" id="login-overlay">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon-container">
+                    <i data-lucide="shield-alert"></i>
+                </div>
+                <h2>AACP Chicken</h2>
+                <p>Admin Security Gate</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Admin Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="E.g. admin" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                </div>
+                <div id="login-error-msg" class="error-message">Invalid username or password!</div>
+                <button type="submit" class="btn btn-primary btn-full">Secure Login</button>
+            </form>
+            <div class="login-footer">
+                <a href="index.html"><i data-lucide="arrow-left"></i> Return to Main Website</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Main Dashboard Layout -->
+    <div class="dashboard-wrapper" id="dashboard-wrapper" style="display: none;">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="logo-accent">AACP</span> Chicken
+                <span class="sidebar-tag">Admin</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-tab="overview">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Overview</span>
+                </button>
+                <button class="nav-item" data-tab="catalog">
+                    <i data-lucide="shopping-bag"></i>
+                    <span>Manage Catalog</span>
+                </button>
+                <button class="nav-item" data-tab="wholesale">
+                    <i data-lucide="file-text"></i>
+                    <span>Wholesale Inquiries</span>
+                </button>
+
+                <button class="nav-item" data-tab="settings">
+                    <i data-lucide="settings"></i>
+                    <span>Manage Settings</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="sidebar-logout" id="logout-trigger">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title">
+                    <h1 id="tab-heading">Dashboard Overview</h1>
+                    <p id="tab-subheading">Welcome back, Admin. Here is the operational overview for today.</p>
+                </div>
+                <div class="header-actions">
+                    <a href="index.html" target="_blank" class="btn btn-outline-white">
+                        <i data-lucide="external-link"></i> View Live Site
+                    </a>
+                </div>
+            </header>
+
+            <!-- Overview Tab Panel -->
+            <section class="tab-content active" id="tab-overview">
+                <!-- Metrics Bar -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon bg-red"><i data-lucide="shopping-bag"></i></div>
+                        <div class="metric-info">
+                            <h3 id="metric-products-count">0</h3>
+                            <p>Products Listed</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon bg-gold"><i data-lucide="file-text"></i></div>
+                        <div class="metric-info">
+                            <h3 id="metric-wholesale-count">0</h3>
+                            <p>Pending Inquiries</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="dashboard-split-grid">
+                    <!-- Daily Base Rate Card -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="trending-up"></i> Daily Mandi Base Rate</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="base-rate-form" class="admin-form">
+                                <div class="form-group">
+                                    <label for="base-rate-input">Chicken Mandi Rate (₹/Kg)</label>
+                                    <div class="inline-input-group">
+                                        <div class="input-with-prefix">
+                                            <span class="currency-prefix">₹</span>
+                                            <input type="number" id="base-rate-input" class="form-control" required min="1" placeholder="130">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Update Rate</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <p class="rate-hint">All dynamic pricing products will be recalculated automatically using this base mandi rate multiplied by their individual product multipliers.</p>
+                        </div>
+                    </div>
+
+                    <!-- Promotions & Active Offers -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="sparkles"></i> Promotions & Offers</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group toggle-group">
+                                <label class="checkbox-toggle">
+                                    <input type="checkbox" id="offer-toggle">
+                                    <span class="toggle-slider"></span>
+                                    <span>Enable Offer Discount Banner</span>
+                                </label>
+                            </div>
+                            
+                            <div id="offer-fields-container" style="display: none; margin-top: 15px;">
+                                <div class="form-group">
+                                    <label for="set-offer-percent">Offer Discount Percentage (%)</label>
+                                    <input type="number" id="set-offer-percent" class="form-control" min="1" max="90" placeholder="10">
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-offer-text">Banner Promotion Text</label>
+                                    <input type="text" id="set-offer-text" class="form-control" placeholder="🔥 Today's Special: 10% OFF on all items!">
+                                </div>
+                                <button type="button" id="btn-save-offer" class="btn btn-secondary">Save & Activate Offer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities Lists -->
+                <div class="dashboard-split-grid" style="margin-top: 30px;">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i data-lucide="file-text"></i> Recent Wholesale Queries</h3>
+                        </div>
+                        <div class="card-body scroll-table-wrapper">
+                            <table class="admin-table table-compact">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Business</th>
+                                        <th>Product</th>
+                                        <th>Qty</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-wholesale-list">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+            </section>
+
+            <!-- Catalog Tab Panel -->
+            <section class="tab-content" id="tab-catalog">
+                <div class="dashboard-card">
+                    <div class="card-header flex-header">
+                        <h3>Product Catalog Items</h3>
+                        <button id="btn-add-product" class="btn btn-primary">
+                            <i data-lucide="plus"></i> Add New Product
+                        </button>
+                    </div>
+                    <div class="card-body scroll-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Pricing Model</th>
+                                    <th>Calculated Price</th>
+                                    <th>Weight Pack</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="catalog-products-table">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Wholesale Inquiries Tab Panel -->
+            <section class="tab-content" id="tab-wholesale">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Bulk Orders & Wholesale Inquiries</h3>
+                    </div>
+                    <div class="card-body scroll-table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Business / Name</th>
+                                    <th>Phone</th>
+                                    <th>Product</th>
+                                    <th>Qty (kg)</th>
+                                    <th>Requirements / Notes</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wholesale-inquiries-table">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- Settings Tab Panel -->
+            <section class="tab-content" id="tab-settings">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Business Information & Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="settings-management-form" class="admin-form">
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="set-address">Operational Address</label>
+                                    <input type="text" id="set-address" class="form-control" required>
+                                </div>
+                                <div class="form-group full-width">
+                                     <label for="set-maps-link">Google Maps Link or Coordinates</label>
+                                     <input type="text" id="set-maps-link" class="form-control" placeholder="E.g. https://google.com/maps/... or 27.6086, 75.1411">
+                                     <small class="rate-hint" style="margin-top: 4px; display: block;">Paste either your full Google Maps address link, or direct comma-separated coordinates (Latitude, Longitude).</small>
+                                 </div>
+                                <div class="form-group">
+                                    <label for="set-retail-phone">Retail Phone</label>
+                                    <input type="text" id="set-retail-phone" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-wholesale-phone">Wholesale Phone</label>
+                                    <input type="text" id="set-wholesale-phone" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-retail-email">Retail Email</label>
+                                    <input type="email" id="set-retail-email" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-wholesale-email">Wholesale Email</label>
+                                    <input type="email" id="set-wholesale-email" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-hours-mon-fri">Operational Hours (Mon-Fri)</label>
+                                    <input type="text" id="set-hours-mon-fri" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-hours-sat">Operational Hours (Saturday)</label>
+                                    <input type="text" id="set-hours-sat" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-hours-sun">Operational Hours (Sunday)</label>
+                                    <input type="text" id="set-hours-sun" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-delivery-flat-rate">Delivery Flat Rate (₹)</label>
+                                    <input type="number" id="set-delivery-flat-rate" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-delivery-rate-per-km">Delivery Rate Per Km (₹)</label>
+                                    <input type="number" id="set-delivery-rate-per-km" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-free-delivery-min-order">Free Delivery Min Order Amount (₹)</label>
+                                    <input type="number" id="set-free-delivery-min-order" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="set-free-delivery-max-distance">Free Delivery Max Distance (Km)</label>
+                                    <input type="number" id="set-free-delivery-max-distance" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="form-actions" style="margin-top: 20px;">
+                                <button type="submit" class="btn btn-primary">Save Settings</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Product Modal Overlay Dialog (Add/Edit) -->
+    <div class="modal-overlay" id="product-modal" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Catalog Product</h3>
+                <button type="button" class="modal-close" id="modal-close-trigger">&times;</button>
+            </div>
+            
+            <form id="product-form" class="admin-form">
+                <input type="hidden" id="prod-edit-id">
+                <input type="hidden" id="prod-image" value="assets/images/whole_chicken.png">
+
+                <div class="modal-body scroll-modal-body">
+                    <!-- Preset Options and File Upload systems split grid -->
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label class="checkbox-toggle" style="margin-bottom: 10px;">
+                                <input type="checkbox" id="use-preset-toggle">
+                                <span class="toggle-slider"></span>
+                                <span>Use Image Presets / Assets</span>
+                            </label>
+                            
+                            <select id="prod-image-preset" class="form-control" style="display: none;">
+                                <option value="assets/images/whole_chicken.png" selected>Whole Chicken Asset</option>
+                                <option value="assets/images/chicken_breast.png">Chicken Breast Asset</option>
+                                <option value="assets/images/chicken_legs.png">Chicken Legs Asset</option>
+                                <option value="assets/images/chicken_wings.png">Chicken Wings Asset</option>
+                                <option value="assets/images/boneless_chicken.png">Boneless Cubes Asset</option>
+                                <option value="assets/images/chicken_mince.png">Chicken Mince Asset</option>
+                            </select>
+                        </div>
+
+                        <!-- Dropzone area -->
+                        <div class="form-group full-width" id="image-upload-wrapper">
+                            <label>Product Image Upload</label>
+                            <div class="upload-dropzone" id="image-dropzone">
+                                <div class="upload-placeholder" id="upload-placeholder">
+                                    <i data-lucide="upload-cloud"></i>
+                                    <span>Drag & Drop image here, or click to browse</span>
+                                    <small>JPG, PNG, WEBP (Max 2MB)</small>
+                                </div>
+                                <img src="" id="prod-image-preview" class="image-preview" style="display: none;" alt="Uploaded Preview">
+                                <input type="file" id="prod-image-file" accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prod-title">Product Title *</label>
+                            <input type="text" id="prod-title" class="form-control" required placeholder="E.g. Chicken Wings">
+                        </div>
+                        <div class="form-group">
+                            <label for="prod-tag">Promo / Best Tag</label>
+                            <input type="text" id="prod-tag" class="form-control" placeholder="E.g. Best Seller, New, Popular">
+                        </div>
+                        <div class="form-group">
+                            <label for="prod-weight">Weight Packaging Pack *</label>
+                            <input type="text" id="prod-weight" class="form-control" required placeholder="E.g. 500g / 1kg packs">
+                        </div>
+                        <div class="form-group">
+                            <label for="prod-type">Product Category Type *</label>
+                            <input type="text" id="prod-type" class="form-control" required placeholder="E.g. Bone-in, Zero Bone, Fresh Cut">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prod-price-type">Pricing Model Type *</label>
+                            <select id="prod-price-type" class="form-control" required>
+                                <option value="dynamic" selected>Dynamic (Base rate scale multiplier)</option>
+                                <option value="fixed">Fixed (Set manual price)</option>
+                            </select>
+                        </div>
+
+                        <!-- Dynamic Rate input -->
+                        <div class="form-group" id="pricing-input-dynamic-group">
+                            <label for="prod-multiplier">Price Multiplier Index *</label>
+                            <input type="number" id="prod-multiplier" step="0.1" min="0.1" class="form-control" value="1.0" required>
+                            <small class="rate-hint">Multiplier x Base Rate = Product Price (E.g. 1.3 x ₹130 = ₹169)</small>
+                        </div>
+
+                        <!-- Fixed Rate input -->
+                        <div class="form-group" id="pricing-input-fixed-group" style="display: none;">
+                            <label for="prod-fixed-price">Fixed Pricing Value (₹) *</label>
+                            <input type="number" id="prod-fixed-price" min="1" class="form-control" placeholder="E.g. 250">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="prod-desc">Product Description *</label>
+                            <textarea id="prod-desc" class="form-control" rows="3" required placeholder="Raw description details about the product item..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lucide Icons (Local) -->
+    <script src="assets/lucide.min.js"></script>
+    <!-- Custom Admin JavaScript -->
+    <script src="admin.js?v=21"></script>
+</body>
+</html>

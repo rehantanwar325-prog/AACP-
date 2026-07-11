@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AACP Chicken - Premium quality fresh chicken products for retail and wholesale. Hygienic processing, timely delivery, and competitive rates.">
+    <meta name="keywords" content="chicken, raw chicken, wholesale chicken, fresh chicken, chicken breast, chicken legs, chicken wings, AACP Chicken, chicken qeema">
+    <meta name="author" content="AACP Chicken">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aacpchicken.com/">
+    <meta property="og:title" content="AACP Chicken - Fresh & Quality Chicken Products">
+    <meta property="og:description" content="Premium quality fresh chicken products for retail and wholesale. Hygienic processing and competitive rates.">
+    <meta property="og:image" content="assets/images/hero_banner.png">
+
+    <title>AACP Chicken | Fresh & Quality Chicken Products - Retail & Wholesale</title>
+
+    <!-- Favicon (Fallback) -->
+    <link rel="icon" type="image/png" href="assets/images/whole_chicken.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css?v=12">
+</head>
+<body>
+
+    <!-- Sticky Header Wrapper -->
+    <div class="sticky-header-wrapper">
+        <!-- Live Price Ticker Bar -->
+        <div class="live-ticker-bar" id="live-price-ticker">
+            <div class="container ticker-container">
+                <span class="ticker-alert"><i data-lucide="trending-up"></i> Market Update:</span>
+                <span class="ticker-text">Today's Live Chicken Mandi Rate is <strong id="ticker-base-rate">₹0</strong>/Kg.</span>
+            </div>
+        </div>
+
+        <!-- Offer Discount Banner (hidden by default, shown when offer is active) -->
+        <div id="offer-banner" style="display: none; background: linear-gradient(135deg, #ef4444, #f97316); color: #fff; padding: 10px 16px; font-family: var(--font-heading); font-size: 0.95rem; font-weight: 700; text-align: center; align-items: center; justify-content: center; gap: 8px; animation: pulse-glow 2s infinite; letter-spacing: 0.5px;">
+            <span style="font-size: 1.2rem;">🎉</span>
+            <span id="offer-banner-text">🔥 Today's Special: 10% OFF on all items!</span>
+            <span style="font-size: 1.2rem;">🎉</span>
+        </div>
+
+        <!-- Header / Navbar -->
+        <header class="navbar-header">
+            <div class="container navbar-container">
+                <a href="#home" class="logo" id="nav-logo">
+                    <span class="logo-accent">AACP</span> Chicken
+                </a>
+                
+                <nav class="nav-menu" id="nav-menu">
+                    <a href="#home" class="nav-link active" id="link-home">Home</a>
+                    <a href="#about" class="nav-link" id="link-about">About Us</a>
+                    <a href="#why-choose-us" class="nav-link" id="link-why">Why Choose Us</a>
+                    <a href="#products" class="nav-link" id="link-products">Products</a>
+                    <a href="#wholesale" class="nav-link" id="link-wholesale">Wholesale</a>
+                    <a href="https://wa.me/919057291246?text=Hello%20AACP%20Chicken,%20I%20want%20to%20place%20an%20order." target="_blank" class="btn btn-primary nav-btn" id="btn-nav-order">Order Now</a>
+                </nav>
+
+                <button class="mobile-menu-toggle" id="menu-toggle" aria-label="Toggle Navigation Menu">
+                    <i data-lucide="menu" class="menu-icon-open"></i>
+                    <i data-lucide="x" class="menu-icon-close"></i>
+                </button>
+            </div>
+        </header>
+    </div>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero-section">
+            <div class="hero-bg-overlay"></div>
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <span class="badge" id="hero-badge">Premium Quality Meat</span>
+                    <h1 class="hero-title" id="hero-heading">Fresh & Quality Chicken Products - Retail & Wholesale</h1>
+                    <p class="hero-description" id="hero-desc">
+                        At AACP Chicken, we commit to delivering the freshest, hygienically processed, and premium grade chicken right to your business or kitchen. Taste the difference in quality and freshness.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#products" class="btn btn-primary btn-large" id="btn-hero-products">Explore Products</a>
+                        <a href="#wholesale" class="btn btn-secondary btn-large" id="btn-hero-wholesale">Wholesale Rates</a>
+                        <a href="https://www.google.com/maps?vet=10CAAQoqAOahcKEwig6d_Y5ciVAxUAAAAAHQAAAAAQCQ..i&rlz=1C1DJPT_en-GBIN1175IN1177&sca_esv=a742e9889a0b108d&pvq=Cg0vZy8xMWZ4OWd6dmZyIhMKDXNhbGltIHRyYWRlcnMQAhgD&lqi=ChNzYWxpbSB0cmFkZXJzIHNpa2FySLfTvZfxrYCACFofEAAQARgAGAEYAiITc2FsaW0gdHJhZGVycyBzaWthcpIBDHBvdWx0cnlfZmFybQ&fvr=1&cs=0&um=1&ie=UTF-8&fb=1&gl=in&sa=X&ftid=0x396ca4c78bec4285:0x3a620abe095ff5f1" target="_blank" class="btn btn-outline-white btn-large" id="btn-hero-location">
+                            <i data-lucide="map-pin"></i> Store Location
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-wave">
+                <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0,32L120,42.7C240,53,480,75,720,74.7C960,75,1200,53,1320,42.7L1440,32L1440,120L1320,120C1200,120,960,120,720,120C480,120,240,120,120,120L0,120Z" fill="#fcfbf9"></path>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Why Choose Us Section -->
+        <section id="why-choose-us" class="why-section section-padding">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="section-tag">Features</span>
+                    <h2 class="section-title">Why Choose AACP Chicken?</h2>
+                    <p class="section-subtitle">We set the gold standard in fresh meat sourcing, processing, and prompt logistics.</p>
+                </div>
+                
+                <div class="why-grid">
+                    <!-- Feature 1 -->
+                    <div class="why-card card-hover" id="why-fresh">
+                        <div class="why-icon-container">
+                            <i data-lucide="shield-check" class="why-icon"></i>
+                        </div>
+                        <h3 class="why-card-title">100% Fresh Quality</h3>
+                        <p class="why-card-desc">Sourced daily from selected healthy poultry farms to guarantee premium taste, tenderness, and safety.</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="why-card card-hover" id="why-hygiene">
+                        <div class="why-icon-container">
+                            <i data-lucide="sparkles" class="why-icon"></i>
+                        </div>
+                        <h3 class="why-card-title">Hygienic Processing</h3>
+                        <p class="why-card-desc">Cleaned and packed under strict temperature-controlled sanitary standards. No chemical additives.</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="why-card card-hover" id="why-delivery">
+                        <div class="why-icon-container">
+                            <i data-lucide="truck" class="why-icon"></i>
+                        </div>
+                        <h3 class="why-card-title">Timely Delivery</h3>
+                        <p class="why-card-desc">Our temperature-controlled logistics network ensures orders arrive chilled and fresh at your doorstep.</p>
+                    </div>
+                    <!-- Feature 4 -->
+                    <div class="why-card card-hover" id="why-price">
+                        <div class="why-icon-container">
+                            <i data-lucide="tags" class="why-icon"></i>
+                        </div>
+                        <h3 class="why-card-title">Competitive Prices</h3>
+                        <p class="why-card-desc">Get premium value for your money. Unbeatable wholesale prices and high-quality retail packs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about" class="about-section section-padding">
+            <div class="container about-container">
+                <div class="about-image-wrapper">
+                    <img src="assets/images/hero_banner.png" alt="AACP Chicken Kitchen Display" class="about-img" id="img-about">
+                    <div class="experience-badge">
+                        <span class="exp-number">15+</span>
+                        <span class="exp-text">Years of Trust</span>
+                    </div>
+                </div>
+                
+                <div class="about-content">
+                    <span class="section-tag">About Us</span>
+                    <h2 class="section-title">A Legacy of Freshness, Quality & Unwavering Trust</h2>
+                    <p class="about-text-lead">
+                        Since our establishment, AACP Chicken has been a cornerstone in supplying high-quality, premium chicken products to restaurants, bulk wholesalers, and direct retail consumers.
+                    </p>
+                    <p class="about-text">
+                        We believe that clean, healthy food builds healthy communities. That is why we maintain rigorous quality standards at every single step of the supply chain—from procurement to processing and packaging. Every order is a commitment to food safety and freshness that you can taste in every bite.
+                    </p>
+                    
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <h4 class="stat-number">100%</h4>
+                            <p class="stat-label">Hygienic standard</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4 class="stat-number">50+</h4>
+                            <p class="stat-label">Bulk Partners</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4 class="stat-number">10k+</h4>
+                            <p class="stat-label">Happy Customers</p>
+                        </div>
+                    </div>
+                    
+                    <a href="https://wa.me/919057291246?text=Hello%20AACP%20Chicken,%20I%20would%20like%20to%20get%20in%20touch." target="_blank" class="btn btn-primary" id="btn-about-contact">Get in Touch</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="products" class="products-section section-padding">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="section-tag">Our Products</span>
+                    <h2 class="section-title">Our Premium Selection</h2>
+                    <p class="section-subtitle">Chilled, cleanly cut, and ready to cook. Available in custom retail and wholesale packaging.</p>
+                </div>
+
+                <div class="products-grid" id="products-grid-container"></div>
+            </div>
+        </section>
+
+        <!-- Wholesale Section -->
+        <section id="wholesale" class="wholesale-section section-padding">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="section-tag tag-light">Wholesale Division</span>
+                    <h2 class="section-title text-white">Wholesale Rates & Bulk Ordering</h2>
+                    <p class="section-subtitle text-white-muted">Partner with AACP Chicken for steady, premium poultry supply at low commercial pricing.</p>
+                </div>
+
+                <div class="wholesale-container">
+                    <div class="wholesale-info-card">
+                        <h3 class="wholesale-card-title">Bulk Purchase Details</h3>
+                        <p class="wholesale-card-lead">We offer customized packaging and logistics solutions for hotels, restaurants, caterers, and cold chain distributors.</p>
+                        
+                        <div class="wholesale-specs">
+                            <div class="spec-row">
+                                <span class="spec-label"><i data-lucide="shopping-bag" class="spec-icon"></i> Minimum Order Quantity (MOQ):</span>
+                                <span class="spec-value">20 Kilograms (Kg)</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i data-lucide="truck" class="spec-icon"></i> Delivery Timeline:</span>
+                                <span class="spec-value">Same-day / Next-day morning</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i data-lucide="thermometer" class="spec-icon"></i> Logistics Cold-Chain:</span>
+                                <span class="spec-value">Below 4°C chilled transit</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label"><i data-lucide="file-text" class="spec-icon"></i> Food Certification:</span>
+                                <span class="spec-value">100% Halal Certified</span>
+                            </div>
+                        </div>
+                        
+                        <div class="wholesale-alert">
+                            <i data-lucide="info" class="alert-icon"></i>
+                            <p class="alert-text"><strong>Please Note:</strong> Wholesale rates fluctuate based on market conditions. Contact our sales department directly to get the current day's price list.</p>
+                        </div>
+                    </div>
+
+                    <div class="wholesale-form-card">
+                        <h3 class="wholesale-form-title">Request a Bulk Quote</h3>
+                        <p class="wholesale-form-subtitle">Fill out the quick query and our wholesale manager will reach out within 2 hours.</p>
+                        
+                        <form id="wholesale-quote-form" action="#">
+                            <div class="form-group">
+                                <label for="ws-name">Business / Individual Name</label>
+                                <input type="text" id="ws-name" class="form-control" placeholder="E.g. Spice Garden Restaurant" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="ws-phone">Phone Number</label>
+                                    <input type="tel" id="ws-phone" class="form-control" placeholder="E.g. 9876543210" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ws-product">Primary Product Interest</label>
+                                    <select id="ws-product" class="form-control" required>
+                                        <option value="" disabled selected>Select Product</option>
+                                        <option value="Whole Chicken">Whole Chicken</option>
+                                        <option value="Chicken Breast">Chicken Breast</option>
+                                        <option value="Chicken Legs">Chicken Legs</option>
+                                        <option value="Chicken Wings">Chicken Wings</option>
+                                        <option value="Boneless Chicken">Boneless Cubes</option>
+                                        <option value="Chicken Mince">Chicken Mince / Qeema</option>
+                                        <option value="Multiple Products">Multiple / Others</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ws-quantity">Estimated Daily/Weekly Volume (kg)</label>
+                                <input type="number" id="ws-quantity" class="form-control" placeholder="Minimum 20 kg" min="20" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ws-message">Delivery Requirements / Notes</label>
+                                <textarea id="ws-message" class="form-control" rows="3" placeholder="Tell us about special cuts or logistics timing needs..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-full" id="btn-submit-quote">Submit Wholesale Inquiry</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <a href="#home" class="logo footer-logo">
+                    <span class="logo-accent">AACP</span> Chicken
+                </a>
+                <p class="footer-tagline">Providing clean, hygienic, and fresh premium grade poultry to kitchens and businesses since 2011.</p>
+                <div class="social-links">
+                    <a href="sms:+919057291246" class="social-icon-link" id="footer-sms-link" aria-label="SMS">
+                        <i data-lucide="message-square"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-links-group">
+                <h4 class="footer-title">Quick Links</h4>
+                <nav class="footer-nav">
+                    <a href="#home">Home</a>
+                    <a href="#about">About Us</a>
+                    <a href="#why-choose-us">Why Choose Us</a>
+                    <a href="#products">Products</a>
+                    <a href="#wholesale">Wholesale</a>
+                </nav>
+            </div>
+
+            <div class="footer-hours">
+                <h4 class="footer-title">Operational Hours</h4>
+                <ul class="hours-list">
+                    <li><span>Monday - Friday</span> <span id="footer-hours-mon-fri">6:00 AM - 9:00 PM</span></li>
+                    <li><span>Saturday</span> <span id="footer-hours-sat">6:00 AM - 9:00 PM</span></li>
+                    <li><span>Sunday</span> <span id="footer-hours-sun">6:00 AM - 8:00 PM</span></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h4 class="footer-title">Contact Us</h4>
+                <ul class="footer-contact-list">
+                    <li class="footer-contact-item">
+                        <i data-lucide="map-pin"></i>
+                        <span id="footer-address">AACP Chicken, Aayat Poultry, Sikar, Rajasthan - 332001</span>
+                    </li>
+                    <li class="footer-contact-item">
+                        <i data-lucide="phone"></i>
+                        <span>
+                            Retail: <a href="tel:+919057291246" id="footer-retail-phone">+91 90572 91246</a><br>
+                            Wholesale: <a href="tel:+919057291246" id="footer-wholesale-phone">+91 90572 91246</a>
+                        </span>
+                    </li>
+                    <li class="footer-contact-item">
+                        <i data-lucide="mail"></i>
+                        <span>
+                            <a href="mailto:info@aacpchicken.com" id="footer-retail-email">info@aacpchicken.com</a><br>
+                            <a href="mailto:sales@aacpchicken.com" id="footer-wholesale-email">sales@aacpchicken.com</a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container footer-bottom-container">
+                <p class="copyright">&copy; <span id="current-year">2026</span> AACP Chicken. All rights reserved.</p>
+                <p class="dev-credits">Designed for Freshness & Trust | <a href="admin.html" style="color: inherit; text-decoration: none; opacity: 0.6; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">Admin Dashboard</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Cart Badge Button -->
+    <button class="cart-float-btn hide-cart" id="cart-floating-btn" aria-label="View Shopping Cart">
+        <div class="cart-btn-icon-wrapper">
+            <i data-lucide="shopping-cart"></i>
+            <span class="cart-badge" id="cart-item-count">0</span>
+        </div>
+        <span class="cart-btn-text" id="cart-btn-summary">₹0 (0 items)</span>
+    </button>
+
+    <!-- Shopping Cart Modal Drawer -->
+    <div class="cart-modal-overlay" id="cart-modal">
+        <div class="cart-modal-content">
+            <div class="cart-modal-header">
+                <h3><i data-lucide="shopping-cart"></i> Your Order Cart</h3>
+                <button class="cart-modal-close" id="cart-close-btn" aria-label="Close Cart">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="cart-modal-body">
+                <!-- Cart Items Container -->
+                <div class="cart-items-list" id="cart-items-container">
+                    <!-- Dynamic Cart Items Will Be Loaded Here -->
+                    <p class="empty-cart-message">Your cart is empty. Add some fresh chicken from our products!</p>
+                </div>
+
+                <!-- Customer Order Info Form -->
+                <form id="cart-checkout-form" class="cart-form">
+                    <input type="hidden" id="cart-cust-lat" value="">
+                    <input type="hidden" id="cart-cust-lon" value="">
+                    <h4 class="form-section-title">Delivery Details</h4>
+                    
+                    <div class="form-group">
+                        <label>Order Option</label>
+                        <div class="order-type-toggle">
+                            <label class="order-type-label">
+                                <input type="radio" name="order-type" value="delivery" checked>
+                                <span>Home Delivery</span>
+                            </label>
+                            <label class="order-type-label">
+                                <input type="radio" name="order-type" value="pickup">
+                                <span>Self-Pickup</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cart-cust-name">Your Name *</label>
+                        <input type="text" id="cart-cust-name" class="form-control" placeholder="E.g. Rajesh Kumar" required>
+                    </div>
+                    
+                    <div class="form-group" id="delivery-address-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <label for="cart-cust-address" style="margin-bottom: 0;">Delivery Address / Location *</label>
+                            <button type="button" id="btn-get-location" style="background: none; border: none; color: var(--primary); font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0;">
+                                <i data-lucide="map-pin" style="width: 12px; height: 12px;"></i> Get Live Location
+                            </button>
+                        </div>
+                        <textarea id="cart-cust-address" class="form-control" rows="2" placeholder="E.g. Flat 302, Sector 15, Vashi, Navi Mumbai" required></textarea>
+                        
+                        <!-- Delivery Distance & Fee Summary -->
+                        <div id="delivery-charge-info" style="display: none; margin-top: 10px; padding: 10px; background-color: var(--bg-accent); border-radius: var(--radius-sm); border: 1px dashed var(--border); font-family: var(--font-heading); font-size: 0.85rem; justify-content: space-between; align-items: center;">
+                            <span><i data-lucide="truck" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px; color: var(--text-muted);"></i> Distance: <strong id="delivery-distance">0.0 km</strong></span>
+                            <span>Delivery Fee: <strong id="delivery-charge-amount" style="color: var(--primary); font-size: 0.95rem;">₹0</strong></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cart-cust-notes" id="delivery-notes-label">Delivery Notes (Optional)</label>
+                        <input type="text" id="cart-cust-notes" class="form-control" placeholder="E.g. Deliver before 12 PM, leave at door">
+                    </div>
+                </form>
+            </div>
+
+            <div class="cart-modal-footer">
+                <!-- Promo alert banner -->
+                <div id="cart-promo-banner" style="display: none; margin-bottom: 12px; padding: 8px 12px; background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-sm); color: #10b981; font-family: var(--font-heading); font-size: 0.85rem; font-weight: 700; align-items: center; gap: 6px;">
+                    <i data-lucide="sparkles" style="width: 14px; height: 14px; flex-shrink: 0;"></i>
+                    <span id="cart-promo-message">Free Delivery Applied!</span>
+                </div>
+
+                <div class="cart-total-summary">
+                    <span class="total-label">Grand Total:</span>
+                    <span class="total-amount" id="cart-total-amount">₹0</span>
+                </div>
+                <button type="submit" form="cart-checkout-form" class="btn btn-primary btn-full checkout-btn" id="cart-submit-order-btn">
+                    <i data-lucide="message-circle"></i> Place Order on WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Floating Pulse Button -->
+    <a href="https://wa.me/919057291246?text=Hello%20AACP%20Chicken,%20I%20would%20like%20to%20inquire%20about%20your%20chicken%20products." 
+       target="_blank" 
+       class="whatsapp-float-btn" 
+       id="whatsapp-floating-trigger"
+       aria-label="Contact AACP Chicken on WhatsApp">
+        <i data-lucide="message-circle" class="whatsapp-btn-icon"></i>
+        <span class="whatsapp-tooltip">Chat with us</span>
+    </a>
+
+    <!-- Lucide Icons (Local) -->
+    <script src="assets/lucide.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="main.js?v=20"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+# Temp files
+.DS_Store
+Thumbs.db
+*.log
+tmp/
+temp/
+scratch/
+.idea/
+.vscode/
