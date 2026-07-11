@@ -191,7 +191,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 try {
                     // Get current file SHA
                     const getResp = await fetch("https://api.github.com/repos/rehantanwar325-prog/AACP-/contents/mandi_rate.json?ref=cloudflare/workers-autoconfig", {
-                        headers: { "Authorization": "token " + ghToken }
+                        headers: { 
+                            "Authorization": "Bearer " + ghToken,
+                            "Accept": "application/vnd.github+json"
+                        }
                     });
                     const fileData = await getResp.json();
                     const sha = fileData.sha || "";
@@ -201,8 +204,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     const putResp = await fetch("https://api.github.com/repos/rehantanwar325-prog/AACP-/contents/mandi_rate.json", {
                         method: "PUT",
                         headers: {
-                            "Authorization": "token " + ghToken,
-                            "Content-Type": "application/json"
+                            "Authorization": "Bearer " + ghToken,
+                            "Content-Type": "application/json",
+                            "Accept": "application/vnd.github+json"
                         },
                         body: JSON.stringify({
                             message: "Update mandi rate to " + newRate,
@@ -213,16 +217,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                     if (putResp.ok) {
                         console.log("Rate pushed to GitHub successfully!");
+                        alert("Daily chicken base rate successfully updated to ₹" + newRate + "/Kg and synced online!");
                     } else {
                         console.error("GitHub push failed:", await putResp.text());
+                        alert("Daily chicken base rate updated locally, but failed to sync online. (GitHub API error)");
                     }
                 } catch (err) {
                     console.error("GitHub API error:", err);
+                    alert("Daily chicken base rate updated locally, but failed to sync online.");
                 }
+            } else {
+                alert("Daily chicken base rate updated locally (₹" + newRate + "/Kg). IMPORTANT: Please paste your GitHub Token in 'Live Rate Sync' settings to sync this change across all devices!");
             }
 
             refreshData();
-            alert("Daily chicken base rate successfully updated to ₹" + newRate + "/Kg!");
         });
     }
 
