@@ -343,11 +343,25 @@ p {
     }
     .live-ticker-bar {
         font-size: 0.72rem;
-        padding: 6px 0;
+        padding: 8px 0;
+    }
+    .ticker-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: nowrap;
     }
     .ticker-alert {
         font-size: 0.65rem;
         padding: 2px 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .ticker-text {
+        white-space: nowrap;
+        font-size: 0.72rem;
     }
     .ticker-text strong {
         font-size: 0.85rem;
@@ -1840,19 +1854,6 @@ select.form-control option {
 
 /* Responsive adjustments */
 @media (max-width: 575px) {
-    .ticker-container {
-        flex-direction: column;
-        gap: 6px;
-    }
-    .ticker-alert {
-        font-size: 0.65rem;
-        padding: 2px 8px;
-        white-space: nowrap;
-    }
-    .ticker-text {
-        text-align: center;
-        white-space: nowrap;
-    }
     .cart-float-btn {
         bottom: 90px;
         right: 20px;
