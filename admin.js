@@ -185,15 +185,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const newRate = baseRateInput.value;
             localStorage.setItem("salim_daily_base_rate", newRate);
             
-            // Save to KVdb Database (PUT)
-            fetch("https://kvdb.io/43Cez4k1JXFjLx5TQhQic2/mandi_rate", {
-                method: "PUT",
-                body: newRate.toString()
+            // Save to npoint.io Database (POST)
+            fetch("https://api.npoint.io/21cb0cf699478fcf70a3", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ mandi_rate: parseInt(newRate) })
             })
             .then(res => {
                 if (!res.ok) console.error("Cloud base rate save failed");
             })
-            .catch(err => console.error("Cloud base rate fetch save error:", err));
+            .catch(err => console.error("Cloud base rate save error:", err));
 
             refreshData();
             alert("Daily chicken base rate successfully updated to ₹" + newRate + "/Kg!");
@@ -206,23 +209,25 @@ document.addEventListener("DOMContentLoaded", () => {
             baseRateInput.value = rate;
         }
 
-        // Fetch live Mandi Rate from KVdb (Real-time Sync)
-        fetch("https://kvdb.io/43Cez4k1JXFjLx5TQhQic2/mandi_rate")
+        // Fetch live Mandi Rate from npoint.io (Real-time Sync)
+        fetch("https://api.npoint.io/21cb0cf699478fcf70a3")
             .then(response => {
-                if (response.ok) return response.text();
+                if (response.ok) return response.json();
                 throw new Error("HTTP status: " + response.status);
             })
-            .then(text => {
-                const fetchedRate = parseInt(text.trim());
-                if (fetchedRate > 0) {
-                    localStorage.setItem("salim_daily_base_rate", fetchedRate.toString());
-                    if (baseRateInput) {
-                        baseRateInput.value = fetchedRate.toString();
+            .then(data => {
+                if (data && data.mandi_rate) {
+                    const fetchedRate = parseInt(data.mandi_rate);
+                    if (fetchedRate > 0) {
+                        localStorage.setItem("salim_daily_base_rate", fetchedRate.toString());
+                        if (baseRateInput) {
+                            baseRateInput.value = fetchedRate.toString();
+                        }
+                        refreshData();
                     }
-                    refreshData();
                 }
             })
-            .catch(err => console.log("KVdb live rate fetch failed inside admin:", err));
+            .catch(err => console.log("npoint live rate fetch failed inside admin:", err));
 
         initializeSettings();
         refreshData();
