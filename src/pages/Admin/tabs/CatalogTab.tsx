@@ -12,6 +12,7 @@ const CatalogTab: React.FC = () => {
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const [image, setImage] = useState('/assets/images/whole_chicken.png');
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [tag, setTag] = useState('');
   const [weight, setWeight] = useState('');
   const [type, setType] = useState('');
@@ -30,6 +31,7 @@ const CatalogTab: React.FC = () => {
       setType(product.type);
       setFixedPrice(product.fixedPrice ? product.fixedPrice.toString() : '');
       setUsePreset(false);
+      setImageFile(null);
     } else {
       setEditId(null);
       setTitle('');
@@ -40,17 +42,42 @@ const CatalogTab: React.FC = () => {
       setType('');
       setFixedPrice('');
       setUsePreset(false);
+      setImageFile(null);
     }
     setModalOpen(true);
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    let finalImageUrl = image;
+
+    if (imageFile && !usePreset) {
+      try {
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
+        });
+        if (uploadRes.ok) {
+          const data = await uploadRes.json();
+          finalImageUrl = data.url;
+        } else {
+          alert('Failed to upload image. Please try again.');
+          return;
+        }
+      } catch (err) {
+        console.error("Image upload failed:", err);
+        alert('Failed to upload image.');
+        return;
+      }
+    }
+
     const newProduct: Product = {
       id: editId || `prod-${Date.now()}`,
       title,
       desc,
-      image,
+      image: finalImageUrl,
       tag,
       weight,
       type,
@@ -100,6 +127,7 @@ const CatalogTab: React.FC = () => {
         alert("Image file is too large! Maximum size is 2MB.");
         return;
       }
+      setImageFile(file);
       const reader = new FileReader();
       reader.onload = (ev) => {
         if (ev.target?.result) {
@@ -161,7 +189,7 @@ const CatalogTab: React.FC = () => {
               <h3>{editId ? 'Edit Product Details' : 'Add New Catalog Product'}</h3>
               <button type="button" className="modal-close" onClick={() => setModalOpen(false)}>&times;</button>
             </div>
-            
+
             <form className="admin-form" onSubmit={handleSave}>
               <div className="modal-body scroll-modal-body">
                 <div className="form-grid">
@@ -171,7 +199,7 @@ const CatalogTab: React.FC = () => {
                       <span className="toggle-slider"></span>
                       <span>Use Image Presets / Assets</span>
                     </label>
-                    
+
                     {usePreset && (
                       <select className="form-control" value={image} onChange={e => setImage(e.target.value)}>
                         <option value="/assets/images/whole_chicken.png">Whole Chicken Asset</option>
@@ -215,8 +243,8 @@ const CatalogTab: React.FC = () => {
                     <input type="text" className="form-control" required value={weight} onChange={e => setWeight(e.target.value)} />
                   </div>
                   <div className="form-group">
-                    <label>Product Category Type *</label>
-                    <input type="text" className="form-control" required value={type} onChange={e => setType(e.target.value)} />
+                    <label>Product Category Type</label>
+                    <input type="text" className="form-control" value={type} onChange={e => setType(e.target.value)} />
                   </div>
 
                   <div className="form-group">
@@ -225,8 +253,8 @@ const CatalogTab: React.FC = () => {
                   </div>
 
                   <div className="form-group full-width">
-                    <label>Product Description *</label>
-                    <textarea className="form-control" rows={3} required value={desc} onChange={e => setDesc(e.target.value)}></textarea>
+                    <label>Product Description</label>
+                    <textarea className="form-control" rows={3} value={desc} onChange={e => setDesc(e.target.value)}></textarea>
                   </div>
                 </div>
               </div>
