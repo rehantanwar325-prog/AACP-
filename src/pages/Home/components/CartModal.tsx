@@ -1,6 +1,24 @@
 import React, { useState } from 'react';
-import { ShoppingCart, X, MapPin, Truck, Sparkles, Trash2, MessageSquare } from 'lucide-react';
+import { ShoppingCart, X, MapPin, Map as MapIcon, Truck, Sparkles, Trash2, MessageSquare } from 'lucide-react';
 import { useAppContext } from '../../../context/AppContext';
+import MapLocationPicker from './MapLocationPicker';
+
+// Helper function to calculate distance in km using Haversine formula
+const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a = 
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * 
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
+
+// Default Shop Location (Sikar, Rajasthan)
+export const SHOP_LAT = 27.609391;
+export const SHOP_LON = 75.139793;
 
 const CartModal: React.FC = () => {
   const { cart, setCart, products, getProductPrice, settings } = useAppContext();
@@ -11,6 +29,7 @@ const CartModal: React.FC = () => {
   const [notes, setNotes] = useState('');
   const [lat, setLat] = useState('');
   const [lon, setLon] = useState('');
+  const [showMapPicker, setShowMapPicker] = useState(false);
 
   const cartItems = products.filter(p => cart[p.id] > 0);
   const totalItems = cartItems.reduce((acc, p) => acc + (cart[p.id] || 0), 0);
@@ -21,9 +40,7 @@ const CartModal: React.FC = () => {
   const maxDistanceForFree = parseFloat(settings.freeDeliveryMaxDistance) || 0;
   const flatRate = parseInt(settings.deliveryFlatRate) || 20;
 
-  // Simulate calculating distance, in reality you'd parse settings.mapsLink 
-  // and use Haversine if lat/lon are set.
-  const distance = lat && lon ? 5.0 : 0; // dummy distance for now to avoid long calc in component
+  const distance = lat && lon ? calculateDistance(SHOP_LAT, SHOP_LON, parseFloat(lat), parseFloat(lon)) : 0;
 
   let isFreeDelivery = false;
   let freeDeliveryReason = "";
@@ -70,12 +87,27 @@ const CartModal: React.FC = () => {
     setCart(newCart);
   };
 
+  const fetchAndSetAddress = async (latitude: string, longitude: string) => {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+      const data = await response.json();
+      if (data && data.display_name) {
+        setAddress(data.display_name);
+      }
+    } catch (error) {
+      console.error("Error fetching address:", error);
+    }
+  };
+
   const handleGetLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setLat(position.coords.latitude.toString());
-          setLon(position.coords.longitude.toString());
+          const newLat = position.coords.latitude.toString();
+          const newLon = position.coords.longitude.toString();
+          setLat(newLat);
+          setLon(newLon);
+          fetchAndSetAddress(newLat, newLon);
           alert("Location captured automatically!");
         },
         () => alert("Unable to get location.")
@@ -86,6 +118,11 @@ const CartModal: React.FC = () => {
   const handleCheckout = (e: React.FormEvent) => {
     e.preventDefault();
     if (totalItems === 0) return;
+
+    if (orderType === 'delivery' && (!lat || !lon || !address.trim())) {
+      alert("Please set your delivery location using 'Select on Map' or 'Live Location'.");
+      return;
+    }
 
     let text = `*New Order - AACP Chicken*\n\n`;
     text += `*Customer Details:*\n`;
@@ -203,16 +240,29 @@ const CartModal: React.FC = () => {
 
               {orderType === 'delivery' && (
                 <div className="form-group">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '8px' }}>
                     <label htmlFor="cart-cust-address" style={{ marginBottom: 0 }}>Delivery Address / Location *</label>
-                    <button type="button" onClick={handleGetLocation}
-                      style={{ background: 'none', border: 'none', color: 'var(--primary)', fontFamily: 'var(--font-heading)', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', padding: 0 }}>
-                      <MapPin style={{ width: '12px', height: '12px' }} /> Get Live Location
-                    </button>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                      <button type="button" onClick={() => setShowMapPicker(true)}
+                        style={{ background: 'none', border: 'none', color: 'var(--primary)', fontFamily: 'var(--font-heading)', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', padding: 0 }}>
+                        <MapIcon style={{ width: '12px', height: '12px' }} /> Select on Map
+                      </button>
+                      <button type="button" onClick={handleGetLocation}
+                        style={{ background: 'none', border: 'none', color: 'var(--primary)', fontFamily: 'var(--font-heading)', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', padding: 0 }}>
+                        <MapPin style={{ width: '12px', height: '12px' }} /> Live Location
+                      </button>
+                    </div>
                   </div>
-                  <textarea id="cart-cust-address" className="form-control" rows={2} value={address} onChange={e => setAddress(e.target.value)} placeholder="E.g. Flat 302, Sector 15..." required></textarea>
+                  {lat && lon ? (
+                    <textarea id="cart-cust-address" className="form-control" rows={2} value={address} onChange={e => setAddress(e.target.value)} placeholder="E.g. Flat 302, Sector 15..." required></textarea>
+                  ) : (
+                    <div style={{ padding: '12px', border: '1px dashed var(--border)', borderRadius: 'var(--radius-sm)', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem', backgroundColor: 'var(--bg-accent)' }}>
+                      Please select location on map or use live location to proceed.
+                    </div>
+                  )}
 
-                  {itemsTotal > 0 && (
+
+                  {itemsTotal > 0 && lat && lon && (
                     <div style={{ display: 'flex', marginTop: '10px', padding: '10px', backgroundColor: 'var(--bg-accent)', borderRadius: 'var(--radius-sm)', border: '1px dashed var(--border)', fontFamily: 'var(--font-heading)', fontSize: '0.85rem', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span>
                         <Truck style={{ width: '14px', height: '14px', verticalAlign: 'middle', marginRight: '4px', color: 'var(--text-muted)' }} />
@@ -253,6 +303,18 @@ const CartModal: React.FC = () => {
           </div>
         </div>
       </div>
+      {showMapPicker && (
+        <MapLocationPicker
+          onLocationSelect={(newLat, newLon) => {
+            setLat(newLat);
+            setLon(newLon);
+            fetchAndSetAddress(newLat, newLon);
+          }}
+          initialLat={lat}
+          initialLon={lon}
+          onClose={() => setShowMapPicker(false)}
+        />
+      )}
     </>
   );
 };
