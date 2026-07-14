@@ -1,6 +1,6 @@
 /* AACP Chicken Admin Panel Stylesheet - admin.css */
 
-:root {
+:root, .dashboard-wrapper, .login-overlay {
     --bg-dark: #121212;
     --bg-panel: #1a1a1a;
     --bg-card: #222222;
@@ -52,6 +52,19 @@ h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     font-weight: 700;
     letter-spacing: -0.5px;
+}
+
+.dashboard-wrapper h1, .dashboard-wrapper h2, .dashboard-wrapper h3, .dashboard-wrapper h4, .dashboard-wrapper h5, .dashboard-wrapper h6,
+.login-overlay h1, .login-overlay h2, .login-overlay h3, .login-overlay h4, .login-overlay h5, .login-overlay h6 {
+    color: var(--text-white);
+}
+
+.dashboard-wrapper, .login-overlay {
+    color: var(--text-white);
+}
+
+.dashboard-wrapper p, .login-overlay p {
+    color: var(--text-muted);
 }
 
 a {

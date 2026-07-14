@@ -4,7 +4,7 @@ import { useAppContext } from '../../../context/AppContext';
 import type { Product } from '../../../types';
 
 const CatalogTab: React.FC = () => {
-  const { products, setProducts, getOriginalPrice } = useAppContext();
+  const { products, getOriginalPrice, fetchProducts } = useAppContext();
   const [modalOpen, setModalOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
 
@@ -15,8 +15,6 @@ const CatalogTab: React.FC = () => {
   const [tag, setTag] = useState('');
   const [weight, setWeight] = useState('');
   const [type, setType] = useState('');
-  const [priceType, setPriceType] = useState<'dynamic' | 'fixed'>('dynamic');
-  const [multiplier, setMultiplier] = useState('1.0');
   const [fixedPrice, setFixedPrice] = useState('');
 
   const [usePreset, setUsePreset] = useState(false);
@@ -30,8 +28,6 @@ const CatalogTab: React.FC = () => {
       setTag(product.tag || '');
       setWeight(product.weight);
       setType(product.type);
-      setPriceType(product.priceType);
-      setMultiplier(product.multiplier.toString());
       setFixedPrice(product.fixedPrice ? product.fixedPrice.toString() : '');
       setUsePreset(false);
     } else {
@@ -42,15 +38,13 @@ const CatalogTab: React.FC = () => {
       setTag('');
       setWeight('');
       setType('');
-      setPriceType('dynamic');
-      setMultiplier('1.0');
       setFixedPrice('');
       setUsePreset(false);
     }
     setModalOpen(true);
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     const newProduct: Product = {
       id: editId || `prod-${Date.now()}`,
@@ -60,22 +54,42 @@ const CatalogTab: React.FC = () => {
       tag,
       weight,
       type,
-      priceType,
-      multiplier: parseFloat(multiplier) || 1.0,
+      priceType: 'fixed',
+      multiplier: 1.0,
       fixedPrice: parseInt(fixedPrice) || 0
     };
 
-    if (editId) {
-      setProducts(products.map(p => p.id === editId ? newProduct : p));
-    } else {
-      setProducts([...products, newProduct]);
+    try {
+      if (editId) {
+        await fetch(`/api/products/${editId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newProduct)
+        });
+      } else {
+        await fetch('/api/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newProduct)
+        });
+      }
+      await fetchProducts();
+    } catch (err) {
+      console.error("Failed to save product:", err);
+      alert("Failed to save product.");
     }
     setModalOpen(false);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
-      setProducts(products.filter(p => p.id !== id));
+      try {
+        await fetch(`/api/products/${id}`, { method: 'DELETE' });
+        await fetchProducts();
+      } catch (err) {
+        console.error("Failed to delete product:", err);
+        alert("Failed to delete product.");
+      }
     }
   };
 
@@ -111,21 +125,19 @@ const CatalogTab: React.FC = () => {
               <tr>
                 <th>Image</th>
                 <th>Title</th>
-                <th>Pricing Model</th>
-                <th>Calculated Price</th>
+                <th>Price</th>
                 <th>Weight Pack</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {products.length === 0 ? (
-                <tr><td colSpan={6} className="text-center" style={{ color: 'var(--text-muted)', padding: '30px' }}>Catalog is empty. Add a product to get started.</td></tr>
+                <tr><td colSpan={5} className="text-center" style={{ color: 'var(--text-muted)', padding: '30px' }}>Catalog is empty. Add a product to get started.</td></tr>
               ) : (
                 products.map(p => (
                   <tr key={p.id}>
                     <td><img src={p.image} className="table-img" alt={p.title} /></td>
                     <td><strong>{p.title}</strong><br /><small style={{ color: 'var(--text-muted)', display: 'inline-block', maxWidth: '250px', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{p.desc}</small></td>
-                    <td><span style={{ fontSize: '0.85rem' }}>{p.priceType === 'fixed' ? 'Fixed Price' : `Dynamic (${p.multiplier}x Base)`}</span></td>
                     <td><strong>₹{getOriginalPrice(p)}</strong></td>
                     <td>{p.weight}</td>
                     <td>
@@ -208,24 +220,9 @@ const CatalogTab: React.FC = () => {
                   </div>
 
                   <div className="form-group">
-                    <label>Pricing Model Type *</label>
-                    <select className="form-control" required value={priceType} onChange={e => setPriceType(e.target.value as any)}>
-                      <option value="dynamic">Dynamic (Base rate scale multiplier)</option>
-                      <option value="fixed">Fixed (Set manual price)</option>
-                    </select>
+                    <label>Price (₹) *</label>
+                    <input type="number" min="1" className="form-control" required value={fixedPrice} onChange={e => setFixedPrice(e.target.value)} />
                   </div>
-
-                  {priceType === 'dynamic' ? (
-                    <div className="form-group">
-                      <label>Price Multiplier Index *</label>
-                      <input type="number" step="0.1" min="0.1" className="form-control" required value={multiplier} onChange={e => setMultiplier(e.target.value)} />
-                    </div>
-                  ) : (
-                    <div className="form-group">
-                      <label>Fixed Pricing Value (₹) *</label>
-                      <input type="number" min="1" className="form-control" required value={fixedPrice} onChange={e => setFixedPrice(e.target.value)} />
-                    </div>
-                  )}
 
                   <div className="form-group full-width">
                     <label>Product Description *</label>

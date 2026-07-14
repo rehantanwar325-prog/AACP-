@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, ShoppingBag, FileText, Settings as SettingsIcon, LogOut } from 'lucide-react';
+import { ShoppingBag, Settings as SettingsIcon, LogOut } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: string;
@@ -16,17 +16,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, onLogout }) 
       </div>
 
       <nav className="sidebar-nav">
-        <button className={`nav-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>
-          <LayoutDashboard size={20} />
-          <span>Overview</span>
-        </button>
         <button className={`nav-item ${activeTab === 'catalog' ? 'active' : ''}`} onClick={() => setActiveTab('catalog')}>
           <ShoppingBag size={20} />
           <span>Manage Catalog</span>
-        </button>
-        <button className={`nav-item ${activeTab === 'wholesale' ? 'active' : ''}`} onClick={() => setActiveTab('wholesale')}>
-          <FileText size={20} />
-          <span>Wholesale Inquiries</span>
         </button>
 
         <button className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>

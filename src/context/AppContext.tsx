@@ -5,6 +5,7 @@ import type { Product, Settings, WholesaleInquiry, ActiveOffer, Cart } from '../
 interface AppContextType {
     products: Product[];
     setProducts: (products: Product[]) => void;
+    fetchProducts: () => Promise<void>;
     baseRate: number;
     setBaseRate: (rate: number) => void;
     cart: Cart;
@@ -19,80 +20,7 @@ interface AppContextType {
     getOriginalPrice: (product: Product) => number;
 }
 
-const DEFAULT_PRODUCTS: Product[] = [
-    {
-        id: "prod-whole",
-        title: "Whole Chicken",
-        desc: "Fresh raw whole chicken, properly cleaned and gutted. Ready for spit roasting, baking, or curry preparation.",
-        image: "/assets/images/whole_chicken.png",
-        tag: "Best Seller",
-        weight: "800g - 1.5kg",
-        type: "Skinless/With Skin",
-        priceType: "dynamic",
-        multiplier: 1.3,
-        fixedPrice: 180
-    },
-    {
-        id: "prod-breast",
-        title: "Chicken Breast",
-        desc: "Boneless, skinless tender breast fillets. Excellent for fitness enthusiasts, grilling, salads, and steaks.",
-        image: "/assets/images/chicken_breast.png",
-        tag: "High Protein",
-        weight: "500g / 1kg packs",
-        type: "Low Fat",
-        priceType: "dynamic",
-        multiplier: 1.8,
-        fixedPrice: 250
-    },
-    {
-        id: "prod-legs",
-        title: "Chicken Legs / Drumsticks",
-        desc: "Juicy and meaty bone-in drumsticks. Extremely flavorful and perfect for tandoori, curries, and deep frying.",
-        image: "/assets/images/chicken_legs.png",
-        tag: "",
-        weight: "500g / 1kg packs",
-        type: "Bone-in",
-        priceType: "dynamic",
-        multiplier: 1.5,
-        fixedPrice: 200
-    },
-    {
-        id: "prod-wings",
-        title: "Chicken Wings",
-        desc: "Tender and clean chicken wings. Ideal for party snacks, smoky barbecue glazing, or crispy frying.",
-        image: "/assets/images/chicken_wings.png",
-        tag: "",
-        weight: "500g packs",
-        type: "Fresh Cut",
-        priceType: "dynamic",
-        multiplier: 1.2,
-        fixedPrice: 160
-    },
-    {
-        id: "prod-boneless",
-        title: "Boneless Chicken Cubes",
-        desc: "Bite-sized cubes cut from tender breast and leg pieces. Super convenient for butter chicken, tikka, and stir-fries.",
-        image: "/assets/images/boneless_chicken.png",
-        tag: "Popular",
-        weight: "500g / 1kg packs",
-        type: "Zero Bone",
-        priceType: "dynamic",
-        multiplier: 2.2,
-        fixedPrice: 300
-    },
-    {
-        id: "prod-mince",
-        title: "Chicken Mince / Qeema",
-        desc: "Fine ground lean chicken meat. Perfect for making delicious meatballs, burgers, seekh kebabs, and parathas.",
-        image: "/assets/images/chicken_mince.png",
-        tag: "",
-        weight: "500g packs",
-        type: "Fine Ground",
-        priceType: "dynamic",
-        multiplier: 2.0,
-        fixedPrice: 280
-    }
-];
+
 
 const DEFAULT_SETTINGS: Settings = {
     address: "AACP Chicken, Aayat Poultry, Sikar, Rajasthan - 332001",
@@ -120,15 +48,26 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const [inquiries, setInquiriesState] = useState<WholesaleInquiry[]>([]);
     const [activeOffer, setActiveOfferState] = useState<ActiveOffer>({ enabled: false, percent: 0, text: "" });
 
+    const fetchProducts = async () => {
+        try {
+            const res = await fetch('/api/products');
+            if (res.ok) {
+                const data = await res.json();
+                setProductsState(data);
+                localStorage.setItem("salim_products", JSON.stringify(data));
+            }
+        } catch (err) {
+            console.error("Failed to fetch products:", err);
+        }
+    };
+
     // Load initial state from LocalStorage
     useEffect(() => {
         const storedProducts = localStorage.getItem("salim_products");
         if (storedProducts) {
             setProductsState(JSON.parse(storedProducts));
-        } else {
-            setProductsState(DEFAULT_PRODUCTS);
-            localStorage.setItem("salim_products", JSON.stringify(DEFAULT_PRODUCTS));
         }
+        fetchProducts();
 
         const storedBaseRate = localStorage.getItem("salim_daily_base_rate");
         if (storedBaseRate) {
@@ -227,7 +166,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
     return (
         <AppContext.Provider value={{
-            products, setProducts,
+            products, setProducts, fetchProducts,
             baseRate, setBaseRate,
             cart, setCart,
             settings, setSettings,
